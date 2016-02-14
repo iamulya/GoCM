@@ -82,6 +82,9 @@ func main() {
 	log.Printf("Using GCM API key %s\n", settings.GCMAPIKey)
 
 	// Start listening
+	if port := os.Getenv("PORT"); port != "" {
+		settings.Port = port
+	}
 	listenAddress := fmt.Sprintf("%s:%s", settings.Host, settings.Port)
 	log.Println("Listening on " + listenAddress)
 
