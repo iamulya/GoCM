@@ -5,13 +5,27 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"log"
 )
 
+type gcm_request struct {
+    tokens []string
+		payload string
+}
+
 // Send a message to GCM
-func send(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
-	tokens := r.PostForm["tokens"]
-	payload := r.PostFormValue("payload")
+func send(w http.ResponseWriter, req *http.Request) {
+
+	decoder := json.NewDecoder(req.Body)
+  var gcmReq gcm_request
+  err := decoder.Decode(&gcmReq)
+  if err != nil {
+		errText := "Couldn't decode json"
+		log.Println(errText)
+  }
+
+	tokens := gcmReq.tokens
+	payload := gcmReq.payload
 
 	go func() {
 		incrementPending()
