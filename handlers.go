@@ -3,26 +3,28 @@ package main
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 	"strconv"
-	"log"
 )
 
-type gcm_request struct {
-    tokens []string
-		payload string
+type gcmRequest struct {
+	tokens  []string
+	payload string
 }
 
 // Send a message to GCM
 func send(w http.ResponseWriter, req *http.Request) {
 
 	decoder := json.NewDecoder(req.Body)
-  var gcmReq gcm_request
-  err := decoder.Decode(&gcmReq)
-  if err != nil {
+	var gcmReq gcmRequest
+	err := decoder.Decode(&gcmReq)
+	if err != nil {
 		errText := "Couldn't decode json"
 		log.Println(errText)
-  }
+	}
+
+	log.Println("Extracted tokens", gcmReq.tokens)
 
 	tokens := gcmReq.tokens
 	payload := gcmReq.payload
