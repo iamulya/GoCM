@@ -3,31 +3,37 @@ package main
 import (
 	"encoding/json"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
 )
 
 type gcmRequest struct {
-	tokens  []string
-	payload string
+	Tokens  []string               `json:"tokens"`
+	Payload map[string]interface{} `json:"payload"`
 }
 
 // Send a message to GCM
 func send(w http.ResponseWriter, req *http.Request) {
-
-	decoder := json.NewDecoder(req.Body)
-	var gcmReq gcmRequest
-	err := decoder.Decode(&gcmReq)
+	body, err := ioutil.ReadAll(req.Body)
 	if err != nil {
+		errText := "Couldn't read body"
+		log.Println(errText)
+	}
+	log.Println(string(body))
+	var gcmReq gcmRequest
+	unmarshallerr := json.Unmarshal(body, &gcmReq)
+	if unmarshallerr != nil {
 		errText := "Couldn't decode json"
 		log.Println(errText)
 	}
 
-	log.Println("Extracted tokens", gcmReq.tokens)
+	log.Println("Extracted tokens", gcmReq.Tokens)
+	log.Println("Extracted payload", gcmReq.Payload)
 
-	tokens := gcmReq.tokens
-	payload := gcmReq.payload
+	tokens := gcmReq.Tokens
+	payload := gcmReq.Payload
 
 	go func() {
 		incrementPending()
