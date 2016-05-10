@@ -1,1 +1,1 @@
-web: ./GoCM --apikey AIzaSyAzvSjruRM96fnkLiaC8msc0LAxNd2CXVM
+web: ./GoCM --apikey AIzaSyDJ_9rWTvkhXmcGHMyE8xQkPCSxtnalAXw
